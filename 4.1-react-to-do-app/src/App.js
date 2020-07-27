@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 class App extends React.Component
 {
@@ -12,11 +13,29 @@ class App extends React.Component
     };
   }
 
-  addToDo ( event )
+  // Add a new todo (see onSubmit in our form below.)
+  addToDo = ( event ) =>
   {
     event.preventDefault(); // Stop the page from reloading.
-    console.log( "Test add todo!" );
+    //console.log( "Test add todo!" );
+
+    //Set up new task.
+    const newTask = {
+      uniqueId : uuidv4(), //Ensure a unique ID. 
+      value: this.state.newToDo
+    };
+    console.log(newTask);
+
+    const currentToDoList = [...this.state.toDos]
+    currentToDoList.push(newTask);
+
+    this.setState({
+      toDos: currentToDoList,
+      newToDo: ""
+    });
   }
+
+ 
 
   updateItem ( key, value )
   {
