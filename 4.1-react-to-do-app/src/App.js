@@ -18,25 +18,26 @@ class App extends React.Component
   addToDo = ( event ) =>
   {
     event.preventDefault(); // Stop the page from reloading.
-    //console.log( "Test add todo!" );
+    // console.log( "Test add todo!" ); // Test that we're submitting!
 
-    //Set up new task.
+    // Set up new task.
     const newTask = {
-      uniqueId : uuidv4(), //Ensure a unique ID. 
-      value: this.state.newToDo
+      uniqueId: uuidv4(), // Ensure a unique ID.
+      value: this.state.newToDo // Read current "new todo" value.
     };
-    console.log(newTask);
 
-    const currentToDoList = [...this.state.toDos]
-    currentToDoList.push(newTask);
+    console.log( newTask ); // Check to see if newTask is generating okay.
 
-    this.setState({
-      toDos: currentToDoList,
-      newToDo: ""
-    });
+    // Create a clone of our ToDos array, so we can make changes before updating state.
+    const currentToDoList = [...this.state.toDos]; // "..." is the spread operator.
+    currentToDoList.push( newTask ); // Add our new task to the clone array.
+
+    // Use "setState" to update any state data (never re-assign directly!)
+    this.setState( { // This is why we made a clone of the to-do list, and updated it before running setState again.
+      toDos: currentToDoList, // Update todos list.
+      newToDo: "" // Clear the "new to-do" field.
+    } );
   }
-
- 
 
   updateItem ( key, value )
   {
@@ -47,6 +48,18 @@ class App extends React.Component
     this.setState( {[key]: value} );
   }
 
+  removeToDo ( id )
+  {
+    // Create a clone of our ToDos array, so we can make changes before updating state.
+    const currentToDoList = [...this.state.toDos]; // "..." is the spread operator.
+
+    // Returns a filtered version of the array, leaving only the items that DIDN'T match the "id" parameter.
+    const updatedToDoList = currentToDoList.filter( toDo => toDo.uniqueId !== id ); // We'll have an array without the target!
+
+    // Since we can't update directly... use the setState method! This will trigger the render() method.
+    this.setState( { toDos: updatedToDoList } );
+  }
+
   render ()
   {
     return (
@@ -54,7 +67,7 @@ class App extends React.Component
         <h1>React To-Do App</h1>
         <form onSubmit={this.addToDo}>
           <label htmlFor="newToDo">
-            Enter a new "To-Do:"
+            Enter a new "To-Do":
             <input
               type="text"
               name="newToDo"
@@ -67,7 +80,11 @@ class App extends React.Component
         </form>
         <h2>Current To-Dos:</h2>
         <ul>
-          <ToDo />
+          {this.state.toDos.map( toDo => ( // We can use .map() to "loop" through our array contents. Great for outputting something like these ToDos.
+            <li key={toDo.uniqueId} onClick={() => {this.removeToDo( toDo.uniqueId )} }>
+              {toDo.value}
+            </li>
+          ) )}
         </ul>
       </>
     );
