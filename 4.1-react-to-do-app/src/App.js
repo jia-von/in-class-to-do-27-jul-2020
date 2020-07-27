@@ -1,5 +1,6 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import ToDo from './ToDo';
 
 class App extends React.Component
 {
@@ -66,7 +67,7 @@ class App extends React.Component
         </form>
         <h2>Current To-Dos:</h2>
         <ul>
-
+          <ToDo />
         </ul>
       </>
     );
